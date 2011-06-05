@@ -288,7 +288,7 @@ class kitToolsLibrary {
    */
   public function getUrlByPageID($pageID, &$url) {
   	global $database;
-  	if (isset($_REQUEST['topics_title']) && defined('TOPIC_ID')) {
+  	if (defined('TOPIC_ID')) {
   		// es handelt sich um eine TOPICS Seite
   		$SQL = sprintf("SELECT link FROM %smod_topics WHERE topic_id='%d'", TABLE_PREFIX, TOPIC_ID);
   		if (false !== ($link = $database->get_one($SQL))) {
