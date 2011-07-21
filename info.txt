@@ -1,0 +1,24 @@
+/**
+ * kitTools
+ * 
+ * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * @link http://phpmanufaktur.de
+ * @copyright 2011
+ * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id$
+ */
+
+Version and Release Notes
+
+Release 0.14
+2011-07-21
+- fixed some smaller problems
+- grant compatibillity for LEPTON CMS
+ 
+Release 0.13
+2011-07-18
+- fixed: missing language definition in getFileNameByPageID()
+  
+Release 0.12
+2011-06-05
+- fixed: problem getting informations about TOPICs articles

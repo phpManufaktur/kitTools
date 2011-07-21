@@ -8,10 +8,27 @@
  * @copyright 2011
  * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
  * @version $Id$
+ * 
+ * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
  */
 
-// prevent this file from being accessed directly
-if (!defined('WB_PATH')) die('invalid call of '.$_SERVER['SCRIPT_NAME']);
+// try to include LEPTON class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {	
+	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
+} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
+	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
+} else {
+	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
+	$inc = false;
+	foreach ($subs as $sub) {
+		if (empty($sub)) continue; $dir .= '/'.$sub;
+		if (file_exists($dir.'/framework/class.secure.php')) { 
+			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
+		} 
+	}
+	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+}
+// end include LEPTON class.secure.php
 
 class kitToolsLibrary {
 	
@@ -262,7 +279,8 @@ class kitToolsLibrary {
     error_reporting($oldErrorReporting) ;
     if($database->is_error()) {
       $this->error = sprintf('[%s - %s] PAGES: %s', __METHOD__, __LINE__, $database->get_error());
-      return false;  }
+      return false;  
+    }
     elseif ($sql_result->numRows() > 0) {
       // alles OK, Daten uebernehmen
       $thisArr = $sql_result->fetchRow() ;
@@ -271,12 +289,15 @@ class kitToolsLibrary {
         $fileName = $this->removeLeadingSlash($thisArr['link'] . $settings['page_extension']);
         return true ; }
       else {
-        $this->error = sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(ps_error_link_by_page_id, $pageID));
-        return false ; }}
+        $this->error = sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tool_error_link_by_page_id, $pageID));
+        return false ; 
+      }
+    }
     else {
       // keine Daten
-      $this->error = sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tools_error_link_row_empty, $pageID));
-      return false ;  }
+      $this->error = sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tool_error_link_row_empty, $pageID));
+      return false ;  
+    }
   } // getFileNameByPageID
 
   /**

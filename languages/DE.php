@@ -1,4 +1,5 @@
 <?php
+
 /**
  * kitTools
  * 
@@ -7,10 +8,27 @@
  * @copyright 2011
  * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
  * @version $Id$
+ * 
+ * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
  */
 
-// prevent this file from being accessed directly
-if (!defined('WB_PATH')) die('invalid call of '.$_SERVER['SCRIPT_NAME']);
+// try to include LEPTON class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {	
+	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
+} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
+	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
+} else {
+	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
+	$inc = false;
+	foreach ($subs as $sub) {
+		if (empty($sub)) continue; $dir .= '/'.$sub;
+		if (file_exists($dir.'/framework/class.secure.php')) { 
+			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
+		} 
+	}
+	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+}
+// end include LEPTON class.secure.php
 
 define('tool_btn_abort',												'Abbruch');
 define('tool_btn_account',											'Konto');
@@ -36,6 +54,8 @@ define('tool_error_cfg_id',											'<p>Der Konfigurationsdatensatz mit der <b
 define('tool_error_cfg_name',										'<p>Zu dem Bezeichner <b>%s</b> wurde kein Konfigurationsdatensatz gefunden!</p>');
 define('tool_error_chmod',											'<p>Die Zugriffsrechte für die Datei %s konnten nicht geändert werden!</p>');
 define('tool_error_id_invalid',									'<p>Der Datensatz mit der <b>ID %d</b> wurde nicht gefunden!</p>');
+define('tool_error_link_by_page_id', 						'<p>Konnte den Dateinamen fürr die PAGE ID <strong>%d</strong> nicht aus den Websitebaker Einstellungen auslesen.</p>');
+define('tool_error_link_row_empty', 						'<p>Es existiert kein Eintrag für die PAGE ID <strong>%d</strong> in den Websitebaker Einstellungen.</p>');
 define('tool_error_mail_sending',								'<p>Die E-Mail an <b>%s</b> konnte nicht versendet werden!</p>');
 define('tool_error_mkdir',											'<p>Das Verzeichnis <b>%s</b> konnte nicht angelegt werden!</p>');
 define('tool_error_missing_file',								'<p>Die Datei <b>%s</b> wurde nicht gefunden!</p>');
@@ -49,6 +69,7 @@ define('tool_error_upload_ini_size',						'<p>Die hochgeladene Datei überschrei
 define('tool_error_upload_move_file',						'<p>Die Datei <b>%s</b> konnte nicht in das Zielverzeichnis verschoben werden!</p>');
 define('tool_error_upload_partial',							'<p>Die Datei <b>%s</b> wurde nur teilweise hochgeladen.</p>');
 define('tool_error_upload_undefined_error',			'<p>Während der Datenübertragung ist ein nicht näher beschriebener Fehler aufgetreteten.</p>');
+
 
 define('tool_header_cfg',												'Einstellungen');
 define('tool_header_cfg_description',						'Erläuterung');
