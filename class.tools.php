@@ -307,9 +307,9 @@ class kitToolsLibrary {
    * @param REFERENCE $url
    * @return BOOLEAN
    */
-  public function getUrlByPageID($pageID, &$url) {
+  public function getUrlByPageID($pageID, &$url, $ignore_topics=false) {
   	global $database;
-  	if (defined('TOPIC_ID')) {
+  	if (defined('TOPIC_ID') && !$ignore_topics) {
   		// es handelt sich um eine TOPICS Seite
   		$SQL = sprintf("SELECT link FROM %smod_topics WHERE topic_id='%d'", TABLE_PREFIX, TOPIC_ID);
   		if (false !== ($link = $database->get_one($SQL))) {
@@ -328,7 +328,7 @@ class kitToolsLibrary {
     return true;
   }
   
-    /**
+  /**
    * Erzeugt einen Link fuer die als page_id angegebene Seite.
    * Parameter werden als Array in der Form 'KEY' => 'VALUE' uebergeben.
    *

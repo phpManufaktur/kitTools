@@ -10,6 +10,10 @@
 
 Version and Release Notes
 
+Release 0.15
+2011-07-25
+- added: getURLbyPageID, switch for ignoring TOPICS
+
 Release 0.14
 2011-07-21
 - fixed some smaller problems
