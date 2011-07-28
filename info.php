@@ -33,7 +33,7 @@ if (defined('WB_PATH')) {
 $module_directory     = 'kit_tools';
 $module_name          = 'kitTools';
 $module_function      = 'snippet';
-$module_version       = '0.14';
+$module_version       = '0.15';
 $module_status        = 'Stable';
 $module_platform      = '2.8'; 
 $module_author        = 'Ralf Hertsch, Berlin (Germany)';
