@@ -12,38 +12,42 @@
  * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {    
+    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
 } else {
-	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
-	$inc = false;
-	foreach ($subs as $sub) {
-		if (empty($sub)) continue; $dir .= '/'.$sub;
-		if (file_exists($dir.'/framework/class.secure.php')) { 
-			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
-		} 
-	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    $oneback = "../";
+    $root = $oneback;
+    $level = 1;
+    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+        $root .= $oneback;
+        $level += 1;
+    }
+    if (file_exists($root.'/framework/class.secure.php')) { 
+        include($root.'/framework/class.secure.php'); 
+    } else {
+        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    }
 }
-// end include LEPTON class.secure.php
+// end include class.secure.php
 
 // include dbConnect
 if (!class_exists('dbConnectLE')) require_once(WB_PATH.'/modules/dbconnect_le/include.php');
 
 class dbDroplets extends dbConnectLE { 
 
-	const field_id							= 'id';
-	const field_name						= 'name';
-	const field_code						= 'code';
-	const field_description			= 'description';
-	const field_modified_when		= 'modified_when';
-	const field_modified_by			= 'modified_by';
-	const field_active					= 'active';
-	const field_comments				= 'comments';
+	const field_id				= 'id';
+	const field_name			= 'name';
+	const field_code			= 'code';
+	const field_description		= 'description';
+	const field_modified_when	= 'modified_when';
+	const field_modified_by		= 'modified_by';
+	const field_active			= 'active';
+	const field_comments		= 'comments';
 	
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		parent::__construct();
 		$this->setTableName('mod_droplets');
@@ -66,37 +70,46 @@ class checkDroplets {
 	var $droplet_path	= '';
 	var $error = '';
 	
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		$this->droplet_path = WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/droplets/' ;
 	} // __construct()
 		
 	/**
-    * Set $this->error to $error
-    * 
-    * @param STR $error
-    */
-  public function setError($error) {
-    $this->error = $error;
-  } // setError()
+     * Set $this->error to $error
+     * 
+     * @param STR $error
+     */
+	public function setError($error) {
+	    $this->error = $error;
+	} // setError()
 
-  /**
-    * Get Error from $this->error;
-    * 
-    * @return STR $this->error
-    */
-  public function getError() {
-    return $this->error;
-  } // getError()
+	/**
+	 * Get Error from $this->error;
+     * 
+     * @return STR $this->error
+     */
+	public function getError() {
+	    return $this->error;
+	} // getError()
 
-  /**
-    * Check if $this->error is empty
-    * 
-    * @return BOOL
-    */
-  public function isError() {
-    return (bool) !empty($this->error);
-  } // isError
+	/**
+     * Check if $this->error is empty
+     * 
+     * @return BOOL
+     */
+	public function isError() {
+	    return (bool) !empty($this->error);
+	} // isError
 	
+	/**
+	 * Insert the droplets within the desired path self::droplet_path into the
+	 * droplets table
+	 * 
+	 * @return boolean
+	 */
 	public function insertDropletsIntoTable() {
 		global $admin;
 		// Read droplets from directory
@@ -119,7 +132,6 @@ class checkDroplets {
 		}
 		// walk through array
 		foreach ($names as $dropfile) {
-			//$droplet = addslashes($this->getDropletCodeFromFile($dropfile));
 			$droplet = $this->getDropletCodeFromFile($dropfile);
 			if ($droplet != "") {
 				// get droplet name
@@ -167,6 +179,12 @@ class checkDroplets {
 		return true;
 	} // insertDropletsIntoTable()
 	
+	/**
+	 * read the droplet code from the $dropletfile
+	 * 
+	 * @param string $dropletfile
+	 * @return string $data
+	 */
 	public function getDropletCodeFromFile($dropletfile) {
 		$data = "";
 		$filename = $this->droplet_path.$dropletfile;
@@ -179,6 +197,3 @@ class checkDroplets {
 	} // getDropletCodeFromFile()
 	
 } // checkDroplets
-
-
-?>
