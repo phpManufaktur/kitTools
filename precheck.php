@@ -36,8 +36,7 @@ if (defined('WB_PATH')) {
 $PRECHECK['WB_VERSION'] = array('VERSION' => '2.8', 'OPERATOR' => '>=');
 $PRECHECK['PHP_VERSION'] = array('VERSION' => '5.2.0', 'OPERATOR' => '>=');
 $PRECHECK['WB_ADDONS'] = array(
-	'dbconnect_le'	=> array('VERSION' => '0.65', 'OPERATOR' => '>='),
-	'droplets' => array('VERSION' => '1.0', 'OPERATOR' => '>='),
+	'dbconnect_le'	=> array('VERSION' => '0.66', 'OPERATOR' => '>=')
 );
 
 global $database;  
