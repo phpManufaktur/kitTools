@@ -10,6 +10,9 @@
 * added LICENSE
 * added README.md
 * removed info.txt
+* added install.php
+* added uninstall.php
+* added upgrade.php
 
 0.16 - 2011-10-21
 
