@@ -2,19 +2,19 @@
 
 /**
  * kitTools
- * 
+ *
  * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
  * @link http://phpmanufaktur.de
  * @copyright 2011
  * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
  * @version $Id$
- * 
+ *
  * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
+if (defined('WB_PATH')) {
+    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
 } else {
     $oneback = "../";
     $root = $oneback;
@@ -23,8 +23,8 @@ if (defined('WB_PATH')) {
         $root .= $oneback;
         $level += 1;
     }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
+    if (file_exists($root.'/framework/class.secure.php')) {
+        include($root.'/framework/class.secure.php');
     } else {
         trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
     }
@@ -32,11 +32,11 @@ if (defined('WB_PATH')) {
 // end include class.secure.php
 
 class kitToolsLibrary {
-	
+
     const   	unkownUser = 'UNKNOWN USER';
     const   	unknownEMail = 'unknown@user.tld';
     private 	$error;
-  
+
     /**
      * Constructor
      *
@@ -52,7 +52,7 @@ class kitToolsLibrary {
      */
 	public function setError($error) {
 	    $this->error = $error;
-	} 
+	}
 
 	/**
 	 * get the $error
@@ -69,7 +69,7 @@ class kitToolsLibrary {
      * @return boolean
      */
 	public function isError() {
-	    return (bool) !empty($this->error);  
+	    return (bool) !empty($this->error);
 	}
 
 	/**
@@ -81,7 +81,7 @@ class kitToolsLibrary {
 	    // read info.php into array
 	    $info_text = file(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/info.php');
 	    if ($info_text == false) {
-	        return -1; 
+	        return -1;
 	    }
 	    // walk through array
 	    foreach ($info_text as $item) {
@@ -89,8 +89,8 @@ class kitToolsLibrary {
 	            // split string $module_version
 	            $value = split('=', $item);
 	            // return floatval
-	            return floatval(ereg_replace('([\'";,\(\)[:space:][:alpha:]])', '', $value[1])); 
-	        } 
+	            return floatval(ereg_replace('([\'";,\(\)[:space:][:alpha:]])', '', $value[1]));
+	        }
 	    }
 	    return -1;
 	} // getVersion()
@@ -103,7 +103,7 @@ class kitToolsLibrary {
 	public function isFrontendActive() {
 	    // Wenn Session Variable gesetzt ist, diese verwenden...
 	    if (isset($_SESSION['FRONTEND'])) {
-	        $_SESSION['FRONTEND'] == 'active' ? $result = true : $result = false; 	
+	        $_SESSION['FRONTEND'] == 'active' ? $result = true : $result = false;
 	    }
 	    else {
 	        // Ansonsten wird geprueft ob die class admin geladen ist.
@@ -111,7 +111,7 @@ class kitToolsLibrary {
 	        // wenn der angemeldete User gleichzeitig das Front- und Backend
 	        // geoeffnet hat.
 	        $classes = get_declared_classes();
-	        in_array('admin', $classes) ? $result = false : $result = true; 
+	        in_array('admin', $classes) ? $result = false : $result = true;
 	    }
 	    return $result;
 	} // isFrontendActive()
@@ -125,15 +125,15 @@ class kitToolsLibrary {
 	    global $wb;
 	    global $admin;
 	    if ($this->isFrontendActive()) {
-	        return (bool) $wb->is_authenticated(); 	
+	        return (bool) $wb->is_authenticated();
 	    }
 	    else {
-	        return (bool) $admin->is_authenticated(); 	
+	        return (bool) $admin->is_authenticated();
 	    }
 	} // isAuthenticated()
 
 	/**
-     * Read the WebsiteBaker or LEPTON settings and return them in a array 
+     * Read the WebsiteBaker or LEPTON settings and return them in a array
      * $settings
      *
      * @param array reference &$settings
@@ -143,18 +143,18 @@ class kitToolsLibrary {
 	    global $database ;
 	    global $sql_result ;
 	    $settings = array();
-	    $thisQuery = "SELECT * FROM " . TABLE_PREFIX . "settings" ;		
+	    $thisQuery = "SELECT * FROM " . TABLE_PREFIX . "settings" ;
 	    $oldErrorReporting = error_reporting(0) ;
 	    $sql_result = $database->query($thisQuery) ;
 	    error_reporting($oldErrorReporting) ;
 	    if($database->is_error()) {
 	        $this->error = sprintf('[%s - %s] SETTINGS: %s', __METHOD__, __LINE__, $database->get_error());
-	        return false ;  
+	        return false ;
 	    }
 	    else {
 	        for($i = 0 ; $i < $sql_result->numRows() ; $i ++) {
 	            $dummy = $sql_result->fetchRow() ;
-	            $settings[$dummy['name']] = $dummy['value'] ; 
+	            $settings[$dummy['name']] = $dummy['value'] ;
 	        }
 	        return true;
 	    }
@@ -170,18 +170,18 @@ class kitToolsLibrary {
 	    global $admin;
 	    if ($this->isFrontendActive()) {
 	        if ($wb->is_authenticated()) {
-	            return $wb->get_username();  
+	            return $wb->get_username();
 	        }
 	        else {
-	            return self::unkownUser; 
+	            return self::unkownUser;
 	        }
 	    }
 	    else {
 	        if ($admin->is_authenticated()) {
-	            return $admin->get_username(); 
+	            return $admin->get_username();
 	        }
 	        else {
-	            return self::unkownUser; 
+	            return self::unkownUser;
 	        }
 	    }
 	} // getUsername()
@@ -190,17 +190,17 @@ class kitToolsLibrary {
      * return the display name in front- or backend
      *
      * @return string
-     */  
+     */
 	public function getDisplayName() {
 	    global $wb;
 	    global $admin;
 	    if ($this->isFrontendActive()) {
 	        if (is_object($wb)) {
 	            if ($wb->is_authenticated()) {
-	                return $wb->get_display_name();  
+	                return $wb->get_display_name();
 	            }
 	            else {
-	                return self::unkownUser; 
+	                return self::unkownUser;
 	            }
 	        }
 	        else {
@@ -209,10 +209,10 @@ class kitToolsLibrary {
 	    }
 	    elseif (is_object($admin)) {
 	        if ($admin->is_authenticated()) {
-	            return $admin->get_display_name(); 
+	            return $admin->get_display_name();
 	        }
 	        else {
-	            return self::unkownUser; 
+	            return self::unkownUser;
 	        }
 	    }
 	    else {
@@ -230,18 +230,18 @@ class kitToolsLibrary {
 	    global $admin;
 	    if ($this->isFrontendActive()) {
 	        if ($wb->is_authenticated()) {
-	            return $wb->get_email(); 
+	            return $wb->get_email();
 	        }
 	        else {
-	            return self::unknownEMail; 
+	            return self::unknownEMail;
 	        }
 	    }
 	    else {
 	        if ($admin->is_authenticated()) {
-	            return $admin->get_email(); 
+	            return $admin->get_email();
 	        }
 	        else {
-	            return self::unknownEMail; 
+	            return self::unknownEMail;
 	        }
 	    }
 	} // getUserEMail()
@@ -266,12 +266,12 @@ class kitToolsLibrary {
      */
 	public function addSlash($path) {
 	    $path = substr($path, strlen($path)-1, 1) == "/" ? $path : $path."/";
-	    return $path;  
+	    return $path;
 	}
 
 	/**
 	 * removes a leading backslash from $path
-	 * 
+	 *
 	 * @param string $path
 	 * @return string $path
 	 */
@@ -301,7 +301,7 @@ class kitToolsLibrary {
 	public function getFileNameByPageID($pageID, &$fileName) {
 	    global $database ;
 	    global $sql_result ;
-    
+
 	    $fileName = 'ERROR';
 	    $settings = array();
 	    if (!$this->getWBSettings($settings)) return false;
@@ -311,24 +311,24 @@ class kitToolsLibrary {
 	    error_reporting($oldErrorReporting) ;
 	    if($database->is_error()) {
 	        $this->error = sprintf('[%s - %s] PAGES: %s', __METHOD__, __LINE__, $database->get_error());
-	        return false;  
+	        return false;
 	    }
 	    elseif ($sql_result->numRows() > 0) {
 	        // alles OK, Daten uebernehmen
 	        $thisArr = $sql_result->fetchRow() ;
 	        if (is_file(WB_PATH . $settings['pages_directory'] . $thisArr['link'] . $settings['page_extension'])) {
 	            $fileName = $this->removeLeadingSlash($thisArr['link'] . $settings['page_extension']);
-	            return true ; 
+	            return true ;
 	        }
 	        else {
 	            $this->error = sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tool_error_link_by_page_id, $pageID));
-	            return false; 
+	            return false;
 	        }
 	    }
 	    else {
 	        // keine Daten
 	        $this->error = sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tool_error_link_row_empty, $pageID));
-	        return false ;  
+	        return false ;
 	    }
 	} // getFileNameByPageID
 
@@ -345,21 +345,23 @@ class kitToolsLibrary {
 	        // es handelt sich um eine TOPICS Seite
 	        $SQL = sprintf("SELECT link FROM %smod_topics WHERE topic_id='%d'", TABLE_PREFIX, TOPIC_ID);
 	        if (false !== ($link = $database->get_one($SQL))) {
-	            $url = WB_URL.PAGES_DIRECTORY.'/topics/'.$link.PAGE_EXTENSION;
+	          // include TOPICS settings
+	          include WB_PATH.'/modules/topics/module_settings.php';
+				    $url = WB_URL.$topics_directory.$link.PAGE_EXTENSION;
 	        }
 	        else {
 	            return false;
-	        } 		
+	        }
 	    }
 	    elseif ($this->getFileNameByPageID($pageID, $url)) {
 	        $url = WB_URL.PAGES_DIRECTORY.'/'.$url;
 	    }
 	    else {
 	        return false;
-	    }    
+	    }
 	    return true;
 	}
-  
+
 	/**
      * Erzeugt einen Link fuer die als page_id angegebene Seite.
      * Parameter werden als Array in der Form 'KEY' => 'VALUE' uebergeben.
@@ -377,10 +379,10 @@ class kitToolsLibrary {
 	    foreach ($params as $key => $value) {
 	        if ($start) {
 	            $start = false;
-	            $link .= "?$key=$value"; 
+	            $link .= "?$key=$value";
 	        }
 	        else {
-	            $link .= "&$key=$value"; 
+	            $link .= "&$key=$value";
 	        }
 	    }
 	    return true;
@@ -424,7 +426,7 @@ class kitToolsLibrary {
 	/**
      * Wandelt einen String in einen Integer Wert um.
      * Verwendet per Default die deutschen Trennzeichen
-     * 
+     *
      * @param string $string
      * @param string $thousand_separator
      * @param string $decimal_separator
@@ -445,10 +447,10 @@ class kitToolsLibrary {
 	 */
 	public function validateEMail($email) {
 		if(preg_match("/^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/i", $email)) {
-			return true; 
+			return true;
 		}
 		else {
-			return false; 
+			return false;
 		}
 	}
 
@@ -461,25 +463,25 @@ class kitToolsLibrary {
 	 */
 	public function bytes2Str($byte) {
 	    if ($byte < 1024) {
-	        $ergebnis = round($byte, 2). ' Byte'; 
+	        $ergebnis = round($byte, 2). ' Byte';
 	    }
 	    elseif ($byte >= 1024 and $byte < pow(1024, 2)) {
-	        $ergebnis = round($byte/1024, 2).' KB'; 
+	        $ergebnis = round($byte/1024, 2).' KB';
 	    }
 	    elseif ($byte >= pow(1024, 2) and $byte < pow(1024, 3)) {
-	        $ergebnis = round($byte/pow(1024, 2), 2).' MB'; 
+	        $ergebnis = round($byte/pow(1024, 2), 2).' MB';
 	    }
 	    elseif ($byte >= pow(1024, 3) and $byte < pow(1024, 4)) {
-	        $ergebnis = round($byte/pow(1024, 3), 2).' GB'; 
+	        $ergebnis = round($byte/pow(1024, 3), 2).' GB';
 	    }
 	    elseif ($byte >= pow(1024, 4) and $byte < pow(1024, 5)) {
-	        $ergebnis = round($byte/pow(1024, 4), 2).' TB'; 
+	        $ergebnis = round($byte/pow(1024, 4), 2).' TB';
 	    }
 	    elseif ($byte >= pow(1024, 5) and $byte < pow(1024, 6)) {
-	        $ergebnis = round($byte/pow(1024, 5), 2).' PB'; 
+	        $ergebnis = round($byte/pow(1024, 5), 2).' PB';
 	    }
 	    elseif ($byte >= pow(1024, 6) and $byte < pow(1024, 7)) {
-	        $ergebnis = round($byte/pow(1024, 6), 2).' EB';  
+	        $ergebnis = round($byte/pow(1024, 6), 2).' EB';
 	    }
 	    return $ergebnis;
 	} // bytes2Str()
@@ -518,7 +520,7 @@ class kitToolsLibrary {
      * Generate a globally unique identifier (GUID)
      * Uses COM extension under Windows otherwise
      * create a random GUID in the same style
-     * 
+     *
      * @return string $guid
      */
 	public function createGUID() {
@@ -526,7 +528,7 @@ class kitToolsLibrary {
 	        $guid = com_create_guid();
 	        $guid = strtolower($guid);
 	        if (strpos($guid, '{') == 0) {
-	            $guid = substr($guid, 1); 
+	            $guid = substr($guid, 1);
 	        }
 	        if (strpos($guid, '}') == strlen($guid)-1) {
 	            $guid = substr($guid, 0, strlen($guid)-2);
@@ -646,10 +648,10 @@ class kitToolsLibrary {
 	        return $string;
 	    }
 	} // strCutting()
-	
+
 	public function convertBytes($value) {
 	    if (is_numeric($value)) {
-	        return $value; 
+	        return $value;
 	    }
 	    else {
 	        $value_length = strlen( $value );
@@ -669,7 +671,7 @@ class kitToolsLibrary {
 	        return $qty;
 	    }
 	} // convertBytes
-  
-  
+
+
 } // class kitToolsLibrary
 
