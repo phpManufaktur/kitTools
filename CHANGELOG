@@ -1,6 +1,10 @@
 ### kitTools
 
-0.17 - 2012-0601
+0.18 - 2012-06-14
+
+* removed WebsiteBaker version check
+
+0.17 - 2012-06-01
 
 * changed getUrlByPageID() to detect changed TOPICS directories
 * moved repository from SVN to GitHub

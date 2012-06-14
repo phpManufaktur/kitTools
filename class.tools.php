@@ -346,6 +346,7 @@ class kitToolsLibrary {
       $SQL = sprintf("SELECT link FROM %smod_topics WHERE topic_id='%d'", TABLE_PREFIX, TOPIC_ID);
       if (false !== ($link = $database->get_one($SQL))) {
         // include TOPICS settings
+        global $topics_directory;
         include WB_PATH . '/modules/topics/module_settings.php';
         $url = WB_URL . $topics_directory . $link . PAGE_EXTENSION;
       }
