@@ -335,12 +335,14 @@ class kitToolsLibrary {
    * Ermittelt die URL einer Seite an Hand der $page_id
    *
    * @param integer $pageID
-   * @param
-   *          string reference $url
+   * @param string reference $url
    * @return boolean
    */
-  public function getUrlByPageID($pageID, &$url, $ignore_topics = false) {
+  public function getUrlByPageID($pageID, &$url, $ignore_topics = false)
+  {
     global $database;
+    global $post_id;
+
     if (defined('TOPIC_ID') && !$ignore_topics) {
       // es handelt sich um eine TOPICS Seite
       $SQL = sprintf("SELECT link FROM %smod_topics WHERE topic_id='%d'", TABLE_PREFIX, TOPIC_ID);
@@ -353,6 +355,17 @@ class kitToolsLibrary {
       else {
         return false;
       }
+    }
+    elseif (defined('POST_ID') || !is_null($post_id)) {
+        // this is a NEWS page
+        $id = defined('POST_ID') ? POST_ID : $post_id;
+        $SQL = "SELECT `link` FROM `".TABLE_PREFIX."mod_news_posts` WHERE `post_id`='$id'";
+        $link = $database->get_one($SQL);
+        if ($database->is_error()) {
+            trigger_error(sprintf('[%s - %s] %s', __FUNCTION__, __LINE__, $database->get_error()), E_USER_ERROR);
+            return false;
+        }
+        $url = WB_URL.PAGES_DIRECTORY.$link.PAGE_EXTENSION;
     }
     elseif ($this->getFileNameByPageID($pageID, $url)) {
       $url = WB_URL . PAGES_DIRECTORY . '/' . $url;
@@ -504,12 +517,12 @@ class kitToolsLibrary {
     // Now remove all bad characters
     $bad = array(
       '\'', /* /  */ '"', /* " */ '<', /* < */  '>', /* > */
-	            '{', /* { */  '}', /* } */  '[', /* [ */  ']', /* ] */  '`', /* ` */
-	            '!', /* ! */  '@', /* @ */  '#', /* # */  '$', /* $ */  '%', /* % */
-	            '^', /* ^ */  '&', /* & */  '*', /* * */  '(', /* ( */  ')', /* ) */
-	            '=', /* = */  '+', /* + */  '|', /* | */  '/', /* / */  '\\', /* \ */
-	            ';', /* ; */  ':', /* : */  ',', /* , */  '?' /* ? */
-	    );
+                '{', /* { */  '}', /* } */  '[', /* [ */  ']', /* ] */  '`', /* ` */
+                '!', /* ! */  '@', /* @ */  '#', /* # */  '$', /* $ */  '%', /* % */
+                '^', /* ^ */  '&', /* & */  '*', /* * */  '(', /* ( */  ')', /* ) */
+                '=', /* = */  '+', /* + */  '|', /* | */  '/', /* / */  '\\', /* \ */
+                ';', /* ; */  ':', /* : */  ',', /* , */  '?' /* ? */
+        );
     $string = str_replace($bad, '', $string);
     // Now convert to lower-case
     $string = strtolower($string);

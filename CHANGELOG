@@ -1,5 +1,9 @@
 ### kitTools
 
+0.19 - 2013-09-30
+
+* added detecting and returning real URL for NEWS articles
+
 0.18 - 2012-06-14
 
 * removed WebsiteBaker version check
@@ -30,11 +34,11 @@
 
 * fixed some smaller problems
 * grant compatibillity for LEPTON CMS
- 
+
 0.13 - 2011-07-18
 
 * fixed: missing language definition in getFileNameByPageID()
-  
+
 0.12 - 2011-06-05
 
 * fixed: problem getting informations about TOPICs articles
